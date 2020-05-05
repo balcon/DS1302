@@ -1,5 +1,4 @@
-#include "stm8s.h"
-#include <stdio.h>
+#include <stm8s.h>
 #define CLK_PIN GPIOD,GPIO_PIN_2
 #define CE_PIN GPIOD,GPIO_PIN_3
 #define DT_PIN GPIOD,GPIO_PIN_4
@@ -59,7 +58,7 @@ short getTime(short command){
         if(GPIO_ReadInputPin(DT_PIN)) res=res|(1<<i);
     }
     GPIO_WriteLow(CE_PIN);
-    if(command==0x85) return ((res&0x30)>>4)*10+(res&0x0F);
+    if(command==0x85) return ((res&0x30)>>4)*10+(res&0x0F); // if get hours
     else return (res>>4)*10+(res&0x0F);
 }
 short getSec(){
@@ -77,18 +76,12 @@ void setMin(short min){
 void setHour(short hour){
     setTime(hour,0x84);
 }
-void main() {
-    CLK_SYSCLKConfig(CLK_PRESCALER_HSIDIV1);
+void dropSec(){
+    setTime(0,0x80);
+}
+void initRTS(){
     GPIO_Init(CLK_PIN,GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(CE_PIN,GPIO_MODE_OUT_PP_LOW_SLOW);
-  //  setHour(2);
- //   setMin(20);
-  //  setTime(0,0x80);
- //   while(1){
- //     printf("%d:%d:%d\n",getHour(),getMin(),getSec());
- //       for(long i;i<60000;i++);
- //   }
-    
-//  while (1) {
-//  } 
+}
+void main(){
 }
